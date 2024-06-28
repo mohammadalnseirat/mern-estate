@@ -43,7 +43,6 @@ export const signin_post = async (req, res, next) => {
     if (!validPassword) {
       return next(handleErrors(404, "Wrong password! Please try again."));
     }
-
     // create a token :
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY);
     // reset password:
@@ -56,6 +55,60 @@ export const signin_post = async (req, res, next) => {
       })
       .status(200)
       .json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// function to sign in with google account:
+export const google_post = async (req, res, next) => {
+  try {
+    // find user by email:
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      // create a token :
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+      // reset password:
+      const { password: pass, ...rest } = user._doc;
+      // save token to prowsser:
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .status(200)
+        .json(rest);
+    } else {
+      // generate password:
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(generatedPassword, 15);
+      // create new user:
+      const newUser = new User({
+        username:
+          req.body.name.split(" ").join("").toLowerCase() +
+          Math.random().toString(36).slice(-4),
+        email: req.body.email,
+        password: hashedPassword,
+        avator: req.body.photo,
+      });
+
+      // save new user:
+      await newUser.save();
+      // create a token :
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY);
+      // reset password:
+      const { password: pass, ...rest } = newUser._doc;
+      // save token to  Browsser:
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .status(200)
+        .json(rest);
+    }
   } catch (error) {
     next(error);
   }

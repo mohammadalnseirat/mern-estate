@@ -70,11 +70,8 @@ const SignUp = () => {
           id="password"
           onChange={handleChangeInput}
         />
-        <button
-          disabled={loading}
-          className="bg-slate-700  text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-        >
-          {loading ? "Loadiing..." : "  Sign up"}
+        <button disabled={loading} className="bg-slate-700  text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+        {loading ? 'Loadiing...':'  Sign up'}
         </button>
       </form>
       <div className="flex gap-2 mt-4">

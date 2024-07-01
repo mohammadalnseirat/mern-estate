@@ -21,28 +21,26 @@ const SignUp = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      // create response:
       const res = await fetch("/api/auth/signup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(formData),
       });
-      // convert the data to json:
       const data = await res.json();
-      // check if the data.success is false
+      console.log(data);
       if (data.success === false) {
-        setError(data.message);
         setLoading(false);
+        setError(data.message);
         return;
       }
-      //  if the data.success is true
       setLoading(false);
       setError(null);
       navigate("/sign-in");
     } catch (error) {
-      setError(error.message);
       setLoading(false);
-      console.log(error.message);
+      setError(error.message);
     }
   };
 
@@ -71,10 +69,13 @@ const SignUp = () => {
           id="password"
           onChange={handleChangeInput}
         />
-        <button disabled={loading} className="bg-slate-700  text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
-        {loading ? 'Loadiing...':'  Sign up'}
+        <button
+          disabled={loading}
+          className="bg-slate-700  text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          {loading ? "Loadiing..." : "  Sign up"}
         </button>
-        <OAuth/>
+        <OAuth />
       </form>
       <div className="flex gap-2 mt-4">
         <p>Alresdy,Have an account?</p>

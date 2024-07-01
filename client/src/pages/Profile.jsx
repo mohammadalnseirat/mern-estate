@@ -16,9 +16,6 @@ const Profile = () => {
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  console.log(filePerc);
-  console.log(fileUploadError);
-  console.log(formData.avator);
 
   // useEffect:
   useEffect(() => {

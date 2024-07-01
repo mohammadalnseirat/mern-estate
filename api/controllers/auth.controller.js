@@ -113,3 +113,13 @@ export const google_post = async (req, res, next) => {
     next(error);
   }
 };
+
+// function to signout user:
+export const signout_get = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+    res.status(200).json("User signed out successfully!");
+  } catch (error) {
+    next(error);
+  }
+};

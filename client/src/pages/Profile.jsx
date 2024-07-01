@@ -14,6 +14,9 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signOutUserStart,
+  signOutUserFailure,
+  signOutUserSuccess,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
@@ -108,6 +111,24 @@ const Profile = () => {
       dispatch(deleteUserFailure(error.message));
     }
   };
+
+  // handle SignOut :
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      // create response:
+      const res = await fetch("/api/auth/signout");
+      // convert data to json:
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(data));
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-4xl font-semibold my-7 text-center">Profile</h1>
@@ -139,27 +160,27 @@ const Profile = () => {
           )}
         </p>
         <input
-          type="text"
-          id="username"
-          placeholder="username"
-          className="border rounded-lg p-3 focus:outline-none"
-          value={currentUser.username}
+          type='text'
+          placeholder='username'
+          defaultValue={currentUser.username}
+          id='username'
+          className='border p-3 rounded-lg'
           onChange={handleChange}
         />
         <input
-          type="email"
-          id="email"
-          placeholder="email"
-          className="border rounded-lg p-3 focus:outline-none"
-          value={currentUser.email}
+          type='email'
+          placeholder='email'
+          id='email'
+          defaultValue={currentUser.email}
+          className='border p-3 rounded-lg'
           onChange={handleChange}
         />
         <input
-          type="password"
-          id="password"
-          placeholder="password"
-          className="border rounded-lg p-3 focus:outline-none"
+          type='password'
+          placeholder='password'
           onChange={handleChange}
+          id='password'
+          className='border p-3 rounded-lg'
         />
         <button
           disabled={loading}
@@ -172,7 +193,9 @@ const Profile = () => {
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">
           Delete your account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+          Sign Out
+        </span>
       </div>
       <p className="text-red-700">{error ? error : ""}</p>
       <p className="text-green-700">

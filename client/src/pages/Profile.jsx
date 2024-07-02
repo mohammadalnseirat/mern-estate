@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { app } from "../firebase";
+import { Link } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -160,27 +161,27 @@ const Profile = () => {
           )}
         </p>
         <input
-          type='text'
-          placeholder='username'
+          type="text"
+          placeholder="username"
           defaultValue={currentUser.username}
-          id='username'
-          className='border p-3 rounded-lg'
+          id="username"
+          className="border p-3 rounded-lg"
           onChange={handleChange}
         />
         <input
-          type='email'
-          placeholder='email'
-          id='email'
+          type="email"
+          placeholder="email"
+          id="email"
           defaultValue={currentUser.email}
-          className='border p-3 rounded-lg'
+          className="border p-3 rounded-lg"
           onChange={handleChange}
         />
         <input
-          type='password'
-          placeholder='password'
+          type="password"
+          placeholder="password"
           onChange={handleChange}
-          id='password'
-          className='border p-3 rounded-lg'
+          id="password"
+          className="border p-3 rounded-lg"
         />
         <button
           disabled={loading}
@@ -188,6 +189,12 @@ const Profile = () => {
         >
           {loading ? "Loading..." : "update"}
         </button>
+        <Link
+          to={"/create-listing"}
+          className="bg-green-700 p-3 text-white text-center rounded-lg uppercase hover:opacity-95"
+        >
+          Create listing
+        </Link>
       </form>
       <div className="flex items-center justify-between mt-5">
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">

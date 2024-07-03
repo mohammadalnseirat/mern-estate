@@ -14,6 +14,7 @@ const CreateListing = () => {
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [filePerc, setFilePerc] = useState(0);
 
   // handle Image Submit:
   const handleImageSubmit = (e) => {
@@ -58,7 +59,8 @@ const CreateListing = () => {
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Progress: ${progress}% done`);
+          // console.log(`Progress: ${progress}% done`);
+          setFilePerc(Math.round(progress));
         },
         (error) => {
           reject(error);
@@ -212,16 +214,20 @@ const CreateListing = () => {
           <p className="text-red-700 text-sm">
             {imageUploadError && imageUploadError}
           </p>
-          {formData.imageUrls.length > 0 &&
+          {filePerc > 0 && filePerc < 100 ? (
+            <span className="text-green-700 text-center">{`Uploading ${filePerc}%`}</span>
+          ) : (
+            filePerc === 100 &&
+            formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (
               <div
                 key={url}
-                className="flex items-center justify-between p-3 border border-gray-400 rounded-lg"
+                className="flex items-center justify-between p-3 border border-gray-300 rounded-lg"
               >
                 <img
                   src={url}
                   alt="image listing"
-                  className="w-20 h-20 object-contain rounded-lg"
+                  className="w-20 h-20 object-contain"
                 />
                 <button
                   onClick={() => handleRemoveImage(index)}
@@ -231,7 +237,9 @@ const CreateListing = () => {
                   X
                 </button>
               </div>
-            ))}
+            ))
+          )}
+
           <button className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
             Create Listing
           </button>

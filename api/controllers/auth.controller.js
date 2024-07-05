@@ -70,7 +70,7 @@ export const google_post = async (req, res, next) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
       // reset password:
       const { password: pass, ...rest } = user._doc;
-      // save token to prowsser:
+      // save token to password:
       res
         .cookie("access_token", token, {
           httpOnly: true,

@@ -37,7 +37,7 @@ const Profile = () => {
       handleFileUpload(file);
     }
   }, [file]);
-  // functon to uploading images:
+  // function to uploading images:
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -208,6 +208,7 @@ const Profile = () => {
       <p className="text-green-700">
         {updateSuccess ? "User updated Successfully!" : ""}
       </p>
+
     </div>
   );
 };

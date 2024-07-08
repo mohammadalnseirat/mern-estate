@@ -295,9 +295,11 @@ const Profile = () => {
                   {" "}
                   <MdDelete />
                 </button>
-                <button className="text-green-500 text-2xl hover:text-green-600 cursor-pointer active:scale-[0.4] transition-all duration-200">
+              <Link to={`update-listing/${listing._id}`}>
+              <button className="text-green-500 text-2xl hover:text-green-600 cursor-pointer active:scale-[0.4] transition-all duration-200">
                   <MdEdit />
                 </button>
+              </Link>
               </div>
             </div>
           ))}

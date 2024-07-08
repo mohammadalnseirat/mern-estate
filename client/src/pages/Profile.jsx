@@ -150,7 +150,28 @@ const Profile = () => {
       }
       setUserListings(data);
     } catch (error) {
-      setUserListingsError(false);
+      setShowListingsError(false);
+    }
+  };
+
+  //function to handle Delete Listing:
+  const handleDeleteListing = async (listingId) => {
+    try {
+      // create response:
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+      });
+      // convert data to json:
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -267,13 +288,16 @@ const Profile = () => {
                 <p>{listing.name}</p>
               </Link>
               <div className="flex flex-col items-center gap-1">
-                <p className="text-red-500 text-2xl  hover:text-red-600 cursor-pointer active:scale-[0.4] transition-all duration-200">
+                <button
+                  onClick={() => handleDeleteListing(listing._id)}
+                  className="text-red-500 text-2xl  hover:text-red-600 cursor-pointer active:scale-[0.4] transition-all duration-200"
+                >
                   {" "}
                   <MdDelete />
-                </p>
-                <p className="text-green-500 text-2xl hover:text-green-600 cursor-pointer active:scale-[0.4] transition-all duration-200">
+                </button>
+                <button className="text-green-500 text-2xl hover:text-green-600 cursor-pointer active:scale-[0.4] transition-all duration-200">
                   <MdEdit />
-                </p>
+                </button>
               </div>
             </div>
           ))}

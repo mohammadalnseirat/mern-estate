@@ -4,7 +4,9 @@ import { IoReturnUpBack } from "react-icons/io5";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
-import "swiper/css/bundle";
+import { useSelector } from "react-redux";
+import "swiper/css";
+import "swiper/css/navigation";
 import {
   FaBath,
   FaBed,
@@ -13,15 +15,18 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa";
+import Contact from "../components/Contact";
 
 const Listing = () => {
-  SwiperCore.use([Navigation]);
+  // SwiperCore.use([Navigation]);
   const params = useParams();
   // some state to save data and loading and error messages:
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [contact, setContact] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   // useEffect to fetch data:
   useEffect(() => {
@@ -68,16 +73,16 @@ const Listing = () => {
       )}
       {listing && !loading && !error && (
         <div>
-           <Swiper navigation>
+          <Swiper navigation={true} modules={[Navigation]}>
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
-                  className='h-[550px]'
+                  className="h-[550px] "
                   style={{
                     background: `url(${url}) center no-repeat`,
-                    backgroundSize: 'cover',
+                    backgroundSize: "cover",
                   }}
-                ></div>
+                />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -157,8 +162,19 @@ const Listing = () => {
               </li>
             </ul>
             {/* for bed and path and parking end here */}
+            {/* for more options start here */}
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="bg-slate-800 uppercase text-white mt-4 text-center p-3 rounded-lg cursor-pointer font-semibold hover:rounded-full hover:opacity-95 transition-all ease-in-out duration-200"
+              >
+                contact landlord
+              </button>
+            )}
+            {contact && <Contact listing={listing} />}
+            {/* for more options end here */}
           </div>
-          {/* for name and price end here */}
+          {/* for content end here */}
         </div>
       )}
     </main>

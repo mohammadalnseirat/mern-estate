@@ -5,6 +5,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
+import {
+  FaBath,
+  FaBed,
+  FaChair,
+  FaMapMarkedAlt,
+  FaParking,
+  FaShare,
+} from "react-icons/fa";
 
 const Listing = () => {
   SwiperCore.use([Navigation]);
@@ -13,6 +21,7 @@ const Listing = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // useEffect to fetch data:
   useEffect(() => {
@@ -59,19 +68,97 @@ const Listing = () => {
       )}
       {listing && !loading && !error && (
         <div>
-          <Swiper navigation>
+           <Swiper navigation>
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
-                  className="h-[450px]"
+                  className='h-[550px]'
                   style={{
                     background: `url(${url}) center no-repeat`,
-                    backgroundSize: "cover",
+                    backgroundSize: 'cover',
                   }}
                 ></div>
               </SwiperSlide>
             ))}
           </Swiper>
+          {/*  for copy the url start here */}
+          <div className="fixed top-[13%] right-[3%] border rounded-full w-12 h-12 flex items-center justify-center bg-slate-100 cursor-pointer z-50">
+            <FaShare
+              className="text-slate-600"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+                setTimeout(() => {
+                  setCopied(false);
+                }, 3000);
+              }}
+            />
+          </div>
+          {copied && (
+            <p className="fixed top-[23%] right-[5%] italic font-semibold z-10 rounded-md bg-slate-100 p-2">
+              Link Copied!
+            </p>
+          )}
+          {/*  for copy url end here */}
+
+          {/* for name and price and content start here */}
+          <div className="flex flex-col max-w-4xl mx-auto p-3 my-7 gap-3">
+            <p className="text-2xl font-semibold">
+              {listing.name}-{" "}
+              {listing.offer
+                ? listing.discountPrice.toLocaleString("en-Us")
+                : listing.regularPrice.toLocaleString("en-Us")}
+              {listing.type === "rent" && "/month"}
+            </p>
+            <p className="flex items-center mt-6 gap-2 text-slate-600 text-sm">
+              <FaMapMarkedAlt className="text-green-700" />
+              {listing.address}
+            </p>
+            <div className="flex gap-4">
+              <p className="bg-red-800 w-full max-w-[200px] text-white text-center p-1 rounded-md">
+                {listing.type === "rent" ? "For Rent" : "For Sale"}
+              </p>
+              {listing.offer && (
+                <p className="bg-green-800 w-full max-w-[200px] text-white text-center p-1  rounded-tl-md rounded-br-md hover:rounded-full transition-all ease-in-out duration-150">
+                  ${+listing.regularPrice - +listing.discountPrice}
+                </p>
+              )}
+            </div>
+            {/* for description start here */}
+            <p className="text-slate-700">
+              <span className="text-black font-bold">Description -</span>
+              {listing.description}
+            </p>
+            {/* for description end here */}#
+            {/* for bed and path and parking start here */}
+            <ul className="text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6 ">
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaBed className="text-lg" />
+                {listing.bedrooms > 1
+                  ? `${listing.bedrooms} Beds`
+                  : `${listing.bedrooms} Bed`}
+              </li>
+
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaBath className="text-lg" />
+                {listing.bathrooms > 1
+                  ? `${listing.bathrooms} Baths`
+                  : `${listing.bathrooms} Bath`}
+              </li>
+
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaParking className="text-lg" />
+                {listing.parking ? "Parking Spot" : "No Parking"}
+              </li>
+
+              <li className="flex items-center gap-1 whitespace-nowrap">
+                <FaChair className="text-lg" />
+                {listing.furnished ? "Furnished" : "Un Furnished"}
+              </li>
+            </ul>
+            {/* for bed and path and parking end here */}
+          </div>
+          {/* for name and price end here */}
         </div>
       )}
     </main>

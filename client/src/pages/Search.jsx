@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListingItem from "../components/ListingItem";
+import { FaAngleDown } from "react-icons/fa6";
+import { BsChevronDoubleDown } from "react-icons/bs";
 
 const Search = () => {
   // some state to get data from sidebar:
@@ -17,6 +19,7 @@ const Search = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
   // console.log(listings);
 
   // useEffect to keep track of previous value in the url and update the search:
@@ -54,12 +57,18 @@ const Search = () => {
     const fetchListings = async () => {
       try {
         setLoading(true);
+        setShowMore(false);
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
         const data = await res.json();
         if (data.success === false) {
           console.log(data.message);
           return;
+        }
+        if (data.length > 8) {
+          setShowMore(true);
+        } else {
+          setShowMore(false);
         }
         setListings(data);
         setLoading(false);
@@ -119,6 +128,29 @@ const Search = () => {
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
+
+
+  // handle show more button:
+  const onShowMoreClick=async()=>{
+    const numberOfListings = listings.length
+    const startIndex = numberOfListings
+    const urlParams = new URLSearchParams(location.search)
+    urlParams.set('startIndex', startIndex)
+    const searchQuery = urlParams.toString()
+    try {
+      const res = await fetch(`/api/listing/get?${searchQuery}`)
+      const data = await res.json()
+      if(data.length <9){
+        setShowMore(false)
+      }
+      setListings([...listings,...data])
+    } catch (error) {
+      setShowMore(false)
+      console.log(error.message)
+    }
+   
+
+  }
   return (
     <div className="flex flex-col md:flex-row">
       {/* div for left side start here */}
@@ -243,7 +275,16 @@ const Search = () => {
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+          
         </div>
+        {showMore && (
+            <div className="flex items-center p-3">
+              {/* <button className=" text-3xl p-7"> */}
+              <BsChevronDoubleDown onClick={onShowMoreClick} className="text-3xl  text-center w-full  text-green-800 font-bold cursor-pointer "/>
+              {/* Show More */}
+            {/* </button> */}
+            </div>
+          )}
       </div>
       {/* div for right side end here */}
     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ListingItem from "../components/ListingItem";
 
 const Search = () => {
   // some state to get data from sidebar:
@@ -12,11 +13,11 @@ const Search = () => {
     sort: "created_at",
     order: "desc",
   });
-  console.log(sidebarData);
+  // console.log(sidebarData);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
-  console.log(listings);
+  // console.log(listings);
 
   // useEffect to keep track of previous value in the url and update the search:
   useEffect(() => {
@@ -132,7 +133,7 @@ const Search = () => {
               id="searchTerm"
               placeholder="search..."
               className="border border-blue-300 rounded-lg p-3 w-full focus:outline-none"
-              value={sidebarData.searchTerm}
+              value={sidebarData.searchTerm || ""}
               onChange={handleChange}
             />
           </div>
@@ -225,10 +226,24 @@ const Search = () => {
       {/* div for left side end here */}
 
       {/* div for right side start here */}
-      <div>
+      <div className="flex-1">
         <h1 className="text-3xl font-semibold border-b border-b-gray-300 p-3 text-slate-600 mt-5">
           Listing Results:
         </h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-800 ">No Listings Found!</p>
+          )}
+          {loading && (
+            <p className="text-green-700 text-center w-full ">Loading...</p>
+          )}
+
+          {!loading &&
+            listings &&
+            listings.map((listing) => (
+              <ListingItem key={listing._id} listing={listing} />
+            ))}
+        </div>
       </div>
       {/* div for right side end here */}
     </div>

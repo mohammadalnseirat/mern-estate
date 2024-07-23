@@ -5,8 +5,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import { useSelector } from "react-redux";
-import "swiper/css";
 import "swiper/css/navigation";
+import "swiper/css/bundle";
+
 import {
   FaBath,
   FaBed,
@@ -125,7 +126,7 @@ const Listing = () => {
               </p>
               {listing.offer && (
                 <p className="bg-green-800 w-full max-w-[200px] text-white text-center p-1  rounded-tl-md rounded-br-md hover:rounded-full transition-all ease-in-out duration-150">
-                  ${+listing.regularPrice - +listing.discountPrice}
+                  ${+listing.regularPrice - +listing.discountPrice} Discount
                 </p>
               )}
             </div>
